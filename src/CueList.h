@@ -21,4 +21,9 @@ class CueList : public QAbstractTableModel
 		int columnCount(const QModelIndex& parent = QModelIndex()) const;
 		QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 		QVariant headerData(int col, Qt::Orientation orientation, int role) const;
+
+		Qt::ItemFlags flags(const QModelIndex& index) const;
+		bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+
+		bool addCue(const Cue& Cue);
 };

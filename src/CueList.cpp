@@ -3,7 +3,6 @@
 
 CueList::CueList()
 {
-	list.push_back(Cue("testtesttest"));
 }
 
 CueList::~CueList()
@@ -65,4 +64,39 @@ QVariant CueList::headerData(int col, Qt::Orientation orientation, int role) con
 		return HEADERS[col];
 
 	return QVariant();
+}
+
+
+Qt::ItemFlags CueList::flags(const QModelIndex& index) const
+{
+	if (index.column() != 0)
+		return Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+	else
+		return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+}
+
+bool CueList::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+	Cue& cue{ list[index.row()] };
+	Cue::Col col{ static_cast<Cue::Col>(index.column()) };
+	switch (col)
+	{
+	case Cue::Col::NAME:
+		cue.setName(value.toString());
+		return true;
+	case Cue::Col::SOURCE:
+		cue.setSourcePath(value.toString());
+		return true;
+	case Cue::Col::LENGTH:
+		cue.setLength(value.toString());
+		return true;
+	default:
+		return false;
+	}
+}
+
+bool CueList::addCue(const Cue& cue)
+{
+	list.push_back(cue);
+	return true;
 }
