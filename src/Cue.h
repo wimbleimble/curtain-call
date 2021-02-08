@@ -4,13 +4,7 @@
 
 class Cue
 {
-	private:
-		QString _name;
-		QString _sourcePath;
-		QString _length;
-	
 	public:
-
 		enum class Col 
 		{
 			STATUS,
@@ -24,23 +18,36 @@ class Cue
 		{
 			INACTIVE,
 			PLAYING,
-			STOPPED,
+			PAUSED,
+			NEXT,
 			NUM_STATUSES
 		};
 
-		Cue() = delete;
+	private:
+		QString _name;
+		QString _sourcePath;
+		QString _length;
+		Status _status;
+	
+	public:
+
 		Cue(const Cue& cue);
-		Cue(const QString& name, const QString& sourcePath = "", const QString& length = "0:00");
+		Cue(const QString& name = "Untitled", const QString& sourcePath = "", const QString& length = "0:00");
 		~Cue();
 		
 		const QString& getName() const;
-		Status status() const;
+		Status getStatus() const;
 		const QString& getSourcePath() const;
 		const QString& getLength() const;
 
-		void setName(const QString& name);
-		void setSourcePath(const QString& sourcePath);
-		void setLength(const QString& length);
+		bool setName(const QString& name);
+		bool setSourcePath(const QString& sourcePath);
+		bool setLength(const QString& length);
+
+		void play();
+		void stop();
+		void pause();
+		void setNext();
 
 };
 

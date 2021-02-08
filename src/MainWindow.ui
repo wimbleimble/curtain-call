@@ -54,8 +54,26 @@
      <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionInsert_Cue"/>
+    <addaction name="actionRemove_Cue"/>
+   </widget>
+   <addaction name="menuEdit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionInsert_Cue">
+   <property name="text">
+    <string>Insert Cue</string>
+   </property>
+  </action>
+  <action name="actionRemove_Cue">
+   <property name="text">
+    <string>Remove Cue</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

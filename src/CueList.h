@@ -7,11 +7,11 @@ class CueList : public QAbstractTableModel
 	Q_OBJECT
 
 	private:
-		std::vector<Cue> list{};
+		std::vector<Cue> _list{};
 		//constexpr static char HEADERS [static_cast<int>(Cue::Col::NUM_COL)] [8]
 			//{"", "Name", "Source", "Length"};
-
 		const std::vector<QString> HEADERS{ "", "Name", "Source", "Length" };
+		int _cursor;
 
 	public:
 		CueList();
@@ -25,5 +25,11 @@ class CueList : public QAbstractTableModel
 		Qt::ItemFlags flags(const QModelIndex& index) const;
 		bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
-		bool addCue(const Cue& Cue);
+		bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
+		bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
+
+		void go();
+		void panic();
+
+		void setCursor(int cursor);
 };
