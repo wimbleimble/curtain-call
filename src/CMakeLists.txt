@@ -7,14 +7,11 @@ endif()
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-
-find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
-
-
 project(OpenShow VERSION 0.0.1
 		DESCRIPTION "Open source alternative to qLab"
 		LANGUAGES CXX)
 
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets Gui)
 
 set(uiFiles
 	MainWindow.ui)
@@ -29,7 +26,6 @@ set(cppFiles
 	MainWindow.cpp
 	Cue.cpp
 	CueList.cpp)
-
 
 qt5_wrap_ui(wrappedUI ${uiFiles})
 qt5_wrap_cpp(wrappedHeaders ${headerFiles})

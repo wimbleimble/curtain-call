@@ -5,7 +5,8 @@ Cue::Cue(const Cue& cue)
 	:_name{ cue.getName() },
 	_sourcePath{ cue.getSourcePath() },
 	_length{ cue.getLength() },
-	_status{ Cue::Status::INACTIVE }
+	_status{ Cue::Status::INACTIVE },
+	_next{}
 {
 }
 
@@ -13,7 +14,8 @@ Cue::Cue(const QString& name, const QString& sourcePath, const QString& length)
 	: _name{ name },
 	_sourcePath{ sourcePath },
 	_length{ length },
-	_status{ Cue::Status::INACTIVE }
+	_status{ Cue::Status::INACTIVE },
+	_next{}
 {
 
 }
@@ -42,6 +44,11 @@ const QString& Cue::getLength() const
 	return _length;
 }
 
+bool Cue::next() const
+{
+	return _next;
+}
+
 bool Cue::setName(const QString& name)
 {
 	_name = name;
@@ -62,8 +69,7 @@ bool Cue::setLength(const QString& length)
 
 void Cue::play()
 {
-	std::cout << "o fuck\n";
-	_status = Cue::Status::PAUSED;
+	_status = Cue::Status::PLAYING;
 }
 
 void Cue::stop()
@@ -78,5 +84,9 @@ void Cue::pause()
 
 void Cue::setNext()
 {
-	_status = Cue::Status::NEXT;
+	_next = true;
+}
+void Cue::unsetNext()
+{
+	_next = false;
 }

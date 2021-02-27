@@ -32,4 +32,5 @@ class CueList : public QAbstractTableModel
 		void panic();
 
 		void setCursor(int cursor);
+		void refreshStatus();
 };

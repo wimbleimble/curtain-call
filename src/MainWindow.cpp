@@ -17,10 +17,10 @@ MainWindow::MainWindow(QWidget* parent) :
 		this, &MainWindow::removeCue);
 
 	connect(ui->nextButton, &QPushButton::clicked,
-		this, &MainWindow::go);
+		cueList, &CueList::go);
 
 	connect(ui->stopButton, &QPushButton::clicked,
-		this, &MainWindow::panic);
+		cueList, &CueList::panic);
 
 	ui->cueListView->setModel(cueList);
 	ui->cueListView->horizontalHeader()->setVisible(true);
@@ -45,14 +45,4 @@ void MainWindow::removeCue()
 		cueList->removeRows(currentSel, 1);
 	else
 		std::cout << "Nothing selected.\n";
-}
-
-void MainWindow::go()
-{
-	cueList->go();
-}
-
-void MainWindow::panic()
-{
-	cueList->panic();
 }

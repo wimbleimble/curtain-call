@@ -19,7 +19,6 @@ class Cue
 			INACTIVE,
 			PLAYING,
 			PAUSED,
-			NEXT,
 			NUM_STATUSES
 		};
 
@@ -28,6 +27,7 @@ class Cue
 		QString _sourcePath;
 		QString _length;
 		Status _status;
+		bool _next;
 	
 	public:
 
@@ -39,6 +39,7 @@ class Cue
 		Status getStatus() const;
 		const QString& getSourcePath() const;
 		const QString& getLength() const;
+		bool next() const;
 
 		bool setName(const QString& name);
 		bool setSourcePath(const QString& sourcePath);
@@ -48,6 +49,7 @@ class Cue
 		void stop();
 		void pause();
 		void setNext();
+		void unsetNext();
 
 };
 

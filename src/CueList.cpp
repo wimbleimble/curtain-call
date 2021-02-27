@@ -35,6 +35,8 @@ QVariant CueList::data(const QModelIndex& index, int role) const
 	{
 	case Cue::Col::STATUS:
 	{
+		if (cue.next())
+			return ">";
 		const Cue::Status status{ cue.getStatus() };
 		switch (status)
 		{
@@ -44,8 +46,6 @@ QVariant CueList::data(const QModelIndex& index, int role) const
 			return "💚";
 		case Cue::Status::PAUSED:
 			return "❤️";
-		case Cue::Status::NEXT:
-			return "˃";
 		default:
 			return "you dumb little shit";
 		}
@@ -82,20 +82,18 @@ bool CueList::setData(const QModelIndex& index, const QVariant& value, int role)
 {
 	Cue& cue{ _list[index.row()] };
 	Cue::Col col{ static_cast<Cue::Col>(index.column()) };
-	bool succ{};
 	switch (col)
 	{
 	case Cue::Col::NAME:
-		return succ;
+		return cue.setName(value.toString());
 	case Cue::Col::SOURCE:
-		return succ;
+		return cue.setSourcePath(value.toString());
 	case Cue::Col::LENGTH:
-		succ = cue.setLength(value.toString());
+		return cue.setLength(value.toString());
 	default:
 		return false;
 	}
 	dataChanged(index, index, QVector<int>{ role });
-	return succ;
 }
 
 
@@ -103,16 +101,15 @@ bool CueList::insertRows(int row, int count, const QModelIndex& parent)
 {
 	if (row > rowCount() || row < 0)
 		return false;
-
+	
 	std::vector<Cue>::iterator it{ _list.begin() + row};
 	beginInsertRows(parent, row, row + count - 1);
 	_list.insert(it, count, Cue{});
-	_list.shrink_to_fit();
 	endInsertRows();
 
 	if (_cursor == -1)
 		setCursor(0);
-		
+
 	return true;
 }
 
@@ -122,18 +119,9 @@ bool CueList::removeRows(int row, int count, const QModelIndex& parent)
 		return false;
 
 	std::vector<Cue>::iterator it{ _list.begin() + row };
-	
-	if (_cursor == row)
-	{
-		if (rowCount() == 1)
-			setCursor(-1);
-		else
-			setCursor(0);
-	}
 
 	beginRemoveRows(parent, row, row + count - 1);
 	_list.erase(it, it + count);
-	_list.shrink_to_fit();
 	endRemoveRows();
 
 	return true;
@@ -141,25 +129,36 @@ bool CueList::removeRows(int row, int count, const QModelIndex& parent)
 
 void CueList::go()
 {
-	setCursor(_cursor + 1 == rowCount() ? 0 : _cursor + 1);
-	if (_cursor - 1 >= 0)
-		_list[_cursor - 1].play();
+	if (_cursor == -1)
+		return;
+	_list[_cursor].play();
+	if (_cursor == rowCount() - 1)
+		setCursor(0);
+	else
+		setCursor(_cursor + 1);
+
 }
 
 void CueList::panic()
 {
 	for (Cue& cue : _list)
 		cue.stop();
+	refreshStatus();
 }
 
 void CueList::setCursor(int cursor)
 {
-	if (_cursor >= 0)
-		_list[_cursor].stop();
-	if (cursor >= 0)
-		_list[cursor].setNext();
-	dataChanged(createIndex(_cursor, 0), 
-		createIndex(cursor, 0), 
-		QVector<int>{ Qt::DisplayRole });
+	if(_cursor != -1)
+		_list[_cursor].unsetNext();
+	_list[cursor].setNext();
 	_cursor = cursor;
+	std::cout << "New Cursor: " << _list[cursor].getName().toStdString() << '\n';
+	refreshStatus();
+}
+
+void CueList::refreshStatus()
+{
+	dataChanged(createIndex(0, 0),
+		createIndex(0, rowCount() - 1),
+		QVector<int>(Qt::DisplayRole));
 }
